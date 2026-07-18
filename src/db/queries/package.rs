@@ -1,15 +1,18 @@
 use anyhow::{Context, Result};
+use serde::Serialize;
 use sqlx::{FromRow, SqlitePool};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, sqlx::Type)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, sqlx::Type, Serialize)]
 #[sqlx(type_name = "text", rename_all = "snake_case")]
+#[serde(rename_all = "snake_case")]
 pub enum DesiredState {
     Installed,
     Removed,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, sqlx::Type)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, sqlx::Type, Serialize)]
 #[sqlx(type_name = "text", rename_all = "snake_case")]
+#[serde(rename_all = "snake_case")]
 pub enum PackageStatus {
     Pending,
     Installing,
@@ -47,15 +50,37 @@ pub async fn fetch_all(pool: &SqlitePool) -> Result<Vec<Package>> {
     .await?)
 }
 
-pub async fn set_desired_state(pool: &SqlitePool, id: &str, state: DesiredState) -> Result<()> {
-    sqlx::query!(
+pub async fn fetch_all_for_manager(pool: &SqlitePool, manager: &str) -> Result<Vec<Package>> {
+    Ok(sqlx::query_as!(
+        Package,
+        r#"select
+            p.id as "id!",
+            p.name as "name!",
+            p.description,
+            p.desired_state as "desired_state!: DesiredState",
+            p.status as "status!: PackageStatus",
+            p.created_at as "created_at!",
+            p.updated_at as "updated_at!"
+        from vulpecula_packages p
+        where exists (
+            select 1 from package_names pn
+            where pn.package_id = p.id and pn.package_manager = ?
+        )"#,
+        manager
+    )
+    .fetch_all(pool)
+    .await?)
+}
+
+pub async fn set_desired_state(pool: &SqlitePool, id: &str, state: DesiredState) -> Result<bool> {
+    let result = sqlx::query!(
         "update vulpecula_packages set desired_state = ?, updated_at = unixepoch() where id = ?",
         state,
         id
     )
     .execute(pool)
     .await?;
-    Ok(())
+    Ok(result.rows_affected() > 0)
 }
 
 pub async fn transition(
@@ -88,7 +113,11 @@ pub async fn transition(
     Ok(())
 }
 
-pub async fn transition_failed(pool: &SqlitePool, pkg: &Package, err: &anyhow::Error) -> Result<()> {
+pub async fn transition_failed(
+    pool: &SqlitePool,
+    pkg: &Package,
+    err: &anyhow::Error,
+) -> Result<()> {
     transition(pool, pkg, PackageStatus::Failed, Some(&err.to_string())).await
 }
 
@@ -96,13 +125,13 @@ pub async fn lookup_name_for_manager(
     pool: &SqlitePool,
     package_id: &str,
     manager: &str,
-) -> Result<String> {
+) -> Result<Option<String>> {
     sqlx::query_scalar!(
         "select name from package_names where package_id = ? and package_manager = ?",
         package_id,
         manager
     )
-    .fetch_one(pool)
+    .fetch_optional(pool)
     .await
-    .with_context(|| format!("no package name mapping for {package_id} on {manager}"))
+    .context("failed to look up package name mapping")
 }
