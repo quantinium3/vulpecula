@@ -1,0 +1,6 @@
+# vulpecula
+
+create the master key using
+```bash
+openssl rand -out /etc/vulpecula/master-key 32
+```
