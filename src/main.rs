@@ -1,13 +1,14 @@
 use std::{future, sync::Arc};
 
 use anyhow::{Context, Result};
-use tokio::{net::TcpListener, signal::unix};
+use tokio::{net::TcpListener, signal::unix, sync::Notify};
 use tracing::{error, info};
 use tracing_subscriber::EnvFilter;
 
-use crate::{config::Config, state::AppState};
+use crate::{config::Config, infra::packages::package_manager::PackageManager, state::AppState};
 
 mod config;
+mod constant;
 mod db;
 mod handler;
 mod infra;
@@ -34,12 +35,23 @@ async fn main() -> Result<()> {
     db::migrations::migrate(&db)
         .await
         .context("Failed to migrate database")?;
-    db::migrations::seed(&db)
+
+    let pm = PackageManager::detect()
+        .await
+        .context("failed to detect package manager")?;
+
+    db::migrations::seed(&db, &pm)
         .await
         .context("Failed to seed database")?;
 
+    let reconcile_notify = Arc::new(Notify::new());
+
+    infra::packages::reconciler::start(&db, reconcile_notify.clone(), pm)
+        .await
+        .context("failed to start package reconciler")?;
+
     let addr = config.socket_addr();
-    let state = AppState::new(config, db);
+    let state = AppState::new(config, db, reconcile_notify, pm);
     info!("Starting server on {}", addr);
 
     let listener = TcpListener::bind(addr)
