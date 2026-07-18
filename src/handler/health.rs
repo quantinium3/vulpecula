@@ -8,7 +8,7 @@ pub struct HealthResponse {
     status: &'static str,
 }
 
-pub async fn health_handler(State(state): State<AppState>) -> ApiResponse<HealthResponse> {
+pub async fn get_health(State(state): State<AppState>) -> ApiResponse<HealthResponse> {
     let is_db_healthy = db::queries::health::is_healthy(&state.db).await;
     let status = match is_db_healthy {
         true => "OK",
