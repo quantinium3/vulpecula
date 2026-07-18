@@ -3,17 +3,18 @@ use std::sync::Arc;
 use sqlx::SqlitePool;
 use tokio::sync::Notify;
 
-use crate::{config::Config, infra::packages::package_manager::PackageManager};
+use crate::{
+    config::Config,
+    infra::{packages::package_manager::PackageManager, parameters::secrets::MasterKey},
+};
 
 #[derive(Clone)]
 pub struct AppState {
     pub config: Arc<Config>,
     pub db: SqlitePool,
-    /// Pinged whenever a handler changes a package's desired state, so the
-    /// reconciler loop wakes up immediately instead of waiting for its next
-    /// periodic tick.
     pub reconcile_notify: Arc<Notify>,
     pub package_manager: PackageManager,
+    pub master_key: Arc<MasterKey>,
 }
 
 impl AppState {
@@ -22,12 +23,14 @@ impl AppState {
         db: SqlitePool,
         reconcile_notify: Arc<Notify>,
         package_manager: PackageManager,
+        master_key: Arc<MasterKey>,
     ) -> Self {
         Self {
             config,
             db,
             reconcile_notify,
             package_manager,
+            master_key,
         }
     }
 }

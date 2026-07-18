@@ -5,7 +5,11 @@ use tokio::{net::TcpListener, signal::unix, sync::Notify};
 use tracing::{error, info};
 use tracing_subscriber::EnvFilter;
 
-use crate::{config::Config, infra::packages::package_manager::PackageManager, state::AppState};
+use crate::{
+    config::Config,
+    infra::{packages::package_manager::PackageManager, parameters::secrets::MasterKey},
+    state::AppState,
+};
 
 mod config;
 mod constant;
@@ -50,8 +54,14 @@ async fn main() -> Result<()> {
         .await
         .context("failed to start package reconciler")?;
 
+    let master_key = Arc::new(
+        MasterKey::load(&config.master_key_path)
+            .await
+            .context("Failed to load master key")?,
+    );
+
     let addr = config.socket_addr();
-    let state = AppState::new(config, db, reconcile_notify, pm);
+    let state = AppState::new(config, db, reconcile_notify, pm, master_key);
     info!("Starting server on {}", addr);
 
     let listener = TcpListener::bind(addr)
