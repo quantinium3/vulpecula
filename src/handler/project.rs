@@ -29,7 +29,11 @@ pub struct CreateProjectRequest {
     env: Option<Vec<EnvRef>>,
     #[validate(range(min = 1, max = 65535, message = "port must be a valid TCP port"))]
     port: Option<u16>,
-    #[validate(range(min = 1, max = 65535, message = "container_port must be a valid TCP port"))]
+    #[validate(range(
+        min = 1,
+        max = 65535,
+        message = "container_port must be a valid TCP port"
+    ))]
     container_port: Option<u16>,
     #[serde(default = "default_retention_count")]
     #[validate(range(min = 0, message = "retention_count must not be negative"))]
@@ -80,9 +84,8 @@ impl ProjectSource {
     fn framework(&self) -> Option<Framework> {
         match self {
             ProjectSource::DockerImage { .. } => None,
-            ProjectSource::GitRepo { framework, .. } | ProjectSource::LocalRepo { framework, .. } => {
-                Some(*framework)
-            }
+            ProjectSource::GitRepo { framework, .. }
+            | ProjectSource::LocalRepo { framework, .. } => Some(*framework),
         }
     }
 }
@@ -167,7 +170,9 @@ pub struct ProjectResponse {
 pub async fn list_projects(
     State(state): State<AppState>,
 ) -> Result<ApiResponse<Vec<Project>>, ApiError> {
-    let projects = project::fetch_all(&state.db).await.map_err(ApiError::internal)?;
+    let projects = project::fetch_all(&state.db)
+        .await
+        .map_err(ApiError::internal)?;
 
     Ok(ApiResponse::ok(projects, "projects fetched"))
 }
@@ -192,7 +197,10 @@ pub async fn get_project(
         .await
         .map_err(ApiError::internal)?;
 
-    Ok(ApiResponse::ok(ProjectDetail { project, env }, "project fetched"))
+    Ok(ApiResponse::ok(
+        ProjectDetail { project, env },
+        "project fetched",
+    ))
 }
 
 pub async fn delete_project(
@@ -223,7 +231,11 @@ pub struct UpdateProjectRequest {
     start_command: Option<String>,
     #[validate(range(min = 1, max = 65535, message = "port must be a valid TCP port"))]
     port: Option<u16>,
-    #[validate(range(min = 1, max = 65535, message = "container_port must be a valid TCP port"))]
+    #[validate(range(
+        min = 1,
+        max = 65535,
+        message = "container_port must be a valid TCP port"
+    ))]
     container_port: Option<u16>,
     #[validate(range(min = 0, message = "retention_count must not be negative"))]
     retention_count: Option<i64>,
@@ -251,7 +263,10 @@ pub async fn update_project(
     let output_directory = body.output_directory.or(existing.output_directory);
     let start_command = body.start_command.or(existing.start_command);
     let port = body.port.map(i64::from).or(existing.port);
-    let container_port = body.container_port.map(i64::from).or(existing.container_port);
+    let container_port = body
+        .container_port
+        .map(i64::from)
+        .or(existing.container_port);
     let retention_count = body.retention_count.unwrap_or(existing.retention_count);
 
     if port.is_some() && container_port.is_none() {
@@ -317,7 +332,9 @@ pub async fn update_project(
         }
     }
 
-    tx.commit().await.map_err(|e| ApiError::internal(e.into()))?;
+    tx.commit()
+        .await
+        .map_err(|e| ApiError::internal(e.into()))?;
 
     let updated = project::fetch_one(&state.db, &id)
         .await
@@ -335,8 +352,6 @@ pub async fn create_project(
         .map_err(|e| ApiError::bad_request(e.to_string()))?;
     validate_source(&body.source)?;
 
-    // Static has no build step and nothing left running to read env vars,
-    // so it never consumes them.
     if body.source.framework() == Some(Framework::Static) {
         reject_if_set("env", &body.env, Framework::Static)?;
     }
@@ -353,50 +368,67 @@ pub async fn create_project(
     let port = body.port.map(i64::from);
     let container_port = body.container_port.map(i64::from);
 
-    let (image, repo_url, branch, framework, root_dir, install_command, build_command, output_directory, start_command) =
-        match &body.source {
-            ProjectSource::DockerImage { image } => {
-                (Some(image.as_str()), None, None, None, None, None, None, None, None)
-            }
-            ProjectSource::GitRepo {
-                repo_url,
-                branch,
-                framework,
-                root_dir,
-                install_command,
-                build_command,
-                output_directory,
-                start_command,
-            } => (
-                None,
-                Some(repo_url.as_str()),
-                Some(branch.as_str()),
-                Some(*framework),
-                root_dir.as_deref(),
-                install_command.as_deref(),
-                build_command.as_deref(),
-                output_directory.as_deref(),
-                start_command.as_deref(),
-            ),
-            ProjectSource::LocalRepo {
-                framework,
-                root_dir,
-                install_command,
-                build_command,
-                output_directory,
-                start_command,
-            } => (
-                None,
-                None,
-                None,
-                Some(*framework),
-                root_dir.as_deref(),
-                install_command.as_deref(),
-                build_command.as_deref(),
-                output_directory.as_deref(),
-                start_command.as_deref(),
-            ),
-        };
+    let (
+        image,
+        repo_url,
+        branch,
+        framework,
+        root_dir,
+        install_command,
+        build_command,
+        output_directory,
+        start_command,
+    ) = match &body.source {
+        ProjectSource::DockerImage { image } => (
+            Some(image.as_str()),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        ),
+        ProjectSource::GitRepo {
+            repo_url,
+            branch,
+            framework,
+            root_dir,
+            install_command,
+            build_command,
+            output_directory,
+            start_command,
+        } => (
+            None,
+            Some(repo_url.as_str()),
+            Some(branch.as_str()),
+            Some(*framework),
+            root_dir.as_deref(),
+            install_command.as_deref(),
+            build_command.as_deref(),
+            output_directory.as_deref(),
+            start_command.as_deref(),
+        ),
+        ProjectSource::LocalRepo {
+            framework,
+            root_dir,
+            install_command,
+            build_command,
+            output_directory,
+            start_command,
+        } => (
+            None,
+            None,
+            None,
+            Some(*framework),
+            root_dir.as_deref(),
+            install_command.as_deref(),
+            build_command.as_deref(),
+            output_directory.as_deref(),
+            start_command.as_deref(),
+        ),
+    };
 
     let mut tx = state
         .db
@@ -424,7 +456,11 @@ pub async fn create_project(
 
     match project::create(&mut *tx, new_project).await {
         Ok(()) => {}
-        Err(err) if err.as_database_error().is_some_and(|e| e.is_unique_violation()) => {
+        Err(err)
+            if err
+                .as_database_error()
+                .is_some_and(|e| e.is_unique_violation()) =>
+        {
             return Err(ApiError::conflict(format!(
                 "project {} already exists",
                 body.name
@@ -450,7 +486,9 @@ pub async fn create_project(
         .await
         .map_err(|e| ApiError::internal(e.into()))?;
 
-    tx.commit().await.map_err(|e| ApiError::internal(e.into()))?;
+    tx.commit()
+        .await
+        .map_err(|e| ApiError::internal(e.into()))?;
 
     Ok(ApiResponse::created(
         ProjectResponse {
@@ -487,9 +525,9 @@ pub async fn deploy_project(
             ApiError::internal(anyhow::anyhow!("docker_image project missing image"))
         })?,
         ProjectSourceKind::GitRepo | ProjectSourceKind::LocalRepo => {
-            let tag = body
-                .tag
-                .ok_or_else(|| ApiError::bad_request("tag is required for this project's source kind"))?;
+            let tag = body.tag.ok_or_else(|| {
+                ApiError::bad_request("tag is required for this project's source kind")
+            })?;
             format!("localhost:{REGISTRY_PORT}/{}:{tag}", project.name)
         }
     };
@@ -532,7 +570,9 @@ pub async fn deploy_project(
         .await
         .map_err(|e| ApiError::internal(e.into()))?;
 
-    tx.commit().await.map_err(|e| ApiError::internal(e.into()))?;
+    tx.commit()
+        .await
+        .map_err(|e| ApiError::internal(e.into()))?;
 
     state.container_reconcile_notify.notify_one();
 
@@ -563,8 +603,8 @@ pub async fn get_project_revisions(
         .map_err(|e| ApiError::internal(e.into()))?
         .into_iter()
         .map(|r| {
-            let spec = serde_json::from_str(&r.spec_json)
-                .map_err(|e| ApiError::internal(e.into()))?;
+            let spec =
+                serde_json::from_str(&r.spec_json).map_err(|e| ApiError::internal(e.into()))?;
             Ok(RevisionResponse {
                 revision: r.revision,
                 spec,
