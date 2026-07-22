@@ -33,7 +33,6 @@ impl Config {
             "VULPECULA_MASTER_KEY_PATH must be an absolute path got {}",
             master_key_path.display()
         );
-
         Ok(Self {
             host,
             port,
