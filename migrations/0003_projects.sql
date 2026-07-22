@@ -1,11 +1,29 @@
 create table if not exists projects (
     id text not null primary key,
     name text not null unique,
-    source_kind text not null check (source_kind in ('docker_image', 'git_remote_framework', 'git_remote_dockerfile','local_framework', 'local_dockerfile')),
-    source_config text not null,
+    source_kind text not null check (source_kind in ('docker_image', 'git_repo', 'local_repo')),
+    image text,
+    repo_url text,
+    branch text,
+    framework text check (framework in ('dockerfile', 'react', 'svelte', 'express', 'static')),
+    root_dir text,
+    install_command text,
+    build_command text,
+    output_directory text,
+    start_command text,
     port integer,
+    container_port integer,
+    retention_count integer not null default 3,
     created_at integer not null default (unixepoch()),
     updated_at integer not null default (unixepoch())
+);
+
+create table if not exists project_env (
+    id integer primary key,
+    project_id text not null references projects(id) on delete cascade,
+    env_name text not null,
+    parameter_key text not null,
+    unique(project_id, env_name)
 );
 
 create table if not exists builds (
