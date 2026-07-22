@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    routing::{get, post},
+    routing::{get, post, put},
 };
 
 use crate::{handler, state::AppState};
@@ -23,9 +23,63 @@ pub fn routes(state: AppState) -> Router {
                 .delete(handler::parameter::delete_parameter),
         );
 
+    let container_router = Router::new()
+        .route("/", get(handler::container::list_containers))
+        .route("/{id}", get(handler::container::get_container))
+        .route("/{id}/start", post(handler::container::start_container))
+        .route("/{id}/stop", post(handler::container::stop_container));
+
+    let project_router = Router::new()
+        .route(
+            "/",
+            get(handler::project::list_projects).post(handler::project::create_project),
+        )
+        .route(
+            "/{id}",
+            get(handler::project::get_project)
+                .patch(handler::project::update_project)
+                .delete(handler::project::delete_project),
+        )
+        .route("/{id}/deploy", post(handler::project::deploy_project))
+        .route("/{id}/revisions", get(handler::project::get_project_revisions));
+
+    let route_router = Router::new()
+        .route(
+            "/",
+            get(handler::route::list_routes).post(handler::route::create_route),
+        )
+        .route(
+            "/{id}",
+            get(handler::route::get_route).delete(handler::route::delete_route),
+        );
+
+    let proxy_router = Router::new()
+        .route(
+            "/",
+            get(handler::proxy::get_proxy_settings).patch(handler::proxy::update_proxy_settings),
+        )
+        .route("/enable", post(handler::proxy::enable_proxy))
+        .route("/disable", post(handler::proxy::disable_proxy))
+        .route("/credentials", get(handler::proxy::list_dns_credentials))
+        .route(
+            "/credentials/{credential_name}",
+            put(handler::proxy::put_dns_credential).delete(handler::proxy::delete_dns_credential),
+        );
+
+    let firewall_router = Router::new()
+        .route("/", get(handler::firewall::get_firewall_settings))
+        .route("/enable", post(handler::firewall::enable_firewall))
+        .route("/disable", post(handler::firewall::disable_firewall))
+        .route("/toggle", post(handler::firewall::toggle_firewall));
+
     let api_router = Router::new()
+        .nest("/container", container_router)
+        .nest("/firewall", firewall_router)
         .nest("/package", package_router)
         .nest("/parameter", parameter_router)
+        .nest("/project", project_router)
+        .nest("/proxy", proxy_router)
+        .nest("/route", route_router)
         .nest("/sysinfo", sysinfo_router);
 
     Router::new()

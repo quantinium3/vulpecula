@@ -7,7 +7,10 @@ use tracing_subscriber::EnvFilter;
 
 use crate::{
     config::Config,
-    infra::{packages::package_manager::PackageManager, parameters::secrets::MasterKey},
+    infra::{
+        containers::docker::DockerClient, packages::package_manager::PackageManager,
+        parameters::secrets::MasterKey, proxy::docker::ProxyDockerClient,
+    },
     state::AppState,
 };
 
@@ -60,8 +63,45 @@ async fn main() -> Result<()> {
             .context("Failed to load master key")?,
     );
 
+    let docker = DockerClient::connect()?;
+    docker.ensure_network().await.context("failed to ensure docker network")?;
+    docker
+        .ensure_registry_running()
+        .await
+        .context("failed to ensure registry container is running")?;
+
+    let container_reconcile_notify = Arc::new(Notify::new());
+
+    infra::containers::reconciler::start(&db, container_reconcile_notify.clone(), docker.clone(), master_key.clone())
+        .await
+        .context("failed to start container reconciler")?;
+
+    let proxy_docker = ProxyDockerClient::connect()?;
+    let proxy_reconcile_notify = Arc::new(Notify::new());
+
+    infra::proxy::reconciler::start(&db, proxy_reconcile_notify.clone(), proxy_docker.clone(), master_key.clone())
+        .await
+        .context("failed to start proxy reconciler")?;
+
+    let firewall_reconcile_notify = Arc::new(Notify::new());
+
+    infra::firewall::reconciler::start(&db, firewall_reconcile_notify.clone(), config.clone())
+        .await
+        .context("failed to start firewall reconciler")?;
+
     let addr = config.socket_addr();
-    let state = AppState::new(config, db, reconcile_notify, pm, master_key);
+    let state = AppState::new(
+        config,
+        db,
+        reconcile_notify,
+        container_reconcile_notify,
+        proxy_reconcile_notify,
+        firewall_reconcile_notify,
+        pm,
+        master_key,
+        docker,
+        proxy_docker,
+    );
     info!("Starting server on {}", addr);
 
     let listener = TcpListener::bind(addr)
