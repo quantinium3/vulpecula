@@ -6,11 +6,13 @@ pub const REGISTRY_IMAGE: &str = "registry:3";
 pub const REGISTRY_PORT: u16 = 5000;
 
 pub const PROXY_CONTAINER_NAME: &str = "vulpecula-proxy";
-pub const PROXY_IMAGE: &str = "vulpecula-caddy:latest";
+pub const PROXY_IMAGE: &str = "caddybuilds/caddy-cloudflare:latest";
 pub const PROXY_HTTP_PORT: u16 = 80;
 pub const PROXY_HTTPS_PORT: u16 = 443;
 pub const PROXY_ADMIN_PORT: u16 = 2019;
 pub const PROXY_ADMIN_ADDR: &str = "127.0.0.1:2019";
+pub const PROXY_DATA_VOLUME: &str = "vulpecula-caddy-data";
+pub const PROXY_CONFIG_VOLUME: &str = "vulpecula-caddy-config";
 
 pub struct SeedPackage {
     pub id: &'static str,
