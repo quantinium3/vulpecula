@@ -4,9 +4,9 @@ create table if not exists containers (
     name text not null unique,
     docker_container_id text,
     pending_docker_container_id text,
-    desired_state text not null default 'stopped' check (desired_state in ('running', 'stopped')),
-    status text not null default 'stopped' check (status in ('pending', 'creating', 'running', 'failed', 'stopping', 'stopped', 'removing', 'cutting_over')),
-    current_revision integer not null default 1,
+    desired_state text not null default 'stopped' check (desired_state in ('running', 'stopped', 'removed')),
+    status text not null default 'stopped' check (status in ('pending', 'creating', 'running', 'failed', 'stopping', 'stopped', 'removing', 'removed', 'cutting_over')),
+    current_revision integer not null default 0,
     created_at integer not null default (unixepoch()),
     updated_at integer not null default (unixepoch())
 );
