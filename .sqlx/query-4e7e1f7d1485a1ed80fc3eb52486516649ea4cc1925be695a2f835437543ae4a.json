@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            desired_state as \"desired_state!: DesiredState\",\n            status as \"status!: ProxyStatus\",\n            dns_provider as \"dns_provider: DnsProvider\",\n            created_at as \"created_at!\",\n            updated_at as \"updated_at!\"\n        from proxy_settings\n        where id = 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "desired_state!: DesiredState",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "status!: ProxyStatus",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "dns_provider: DnsProvider",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "updated_at!",
+        "ordinal": 4,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "4e7e1f7d1485a1ed80fc3eb52486516649ea4cc1925be695a2f835437543ae4a"
+}

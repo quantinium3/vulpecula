@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into container_state_transitions (container_id, from_status, to_status, reason) values (?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "e6533ca15522d69da16e9664bba962dd138d333559a44deda0228e8eeb63fe91"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update vulpecula_packages set desired_state = ?, updated_at = unixepoch() where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "2dec436629e6c8bce6f465ddb89be316aa3a677e436681e156c955f86d0d11a7"
+}

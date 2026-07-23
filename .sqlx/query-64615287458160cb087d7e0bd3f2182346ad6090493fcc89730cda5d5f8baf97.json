@@ -1,0 +1,116 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            id as \"id!\",\n            name as \"name!\",\n            source_kind as \"source_kind!: ProjectSourceKind\",\n            image,\n            repo_url,\n            branch,\n            framework as \"framework: Framework\",\n            root_dir,\n            install_command,\n            build_command,\n            output_directory,\n            start_command,\n            port,\n            container_port,\n            retention_count as \"retention_count!\",\n            created_at as \"created_at!\",\n            updated_at as \"updated_at!\"\n        from projects\n        order by name",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_kind!: ProjectSourceKind",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "image",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "repo_url",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "branch",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "framework: Framework",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "root_dir",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "install_command",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "build_command",
+        "ordinal": 9,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_directory",
+        "ordinal": 10,
+        "type_info": "Text"
+      },
+      {
+        "name": "start_command",
+        "ordinal": 11,
+        "type_info": "Text"
+      },
+      {
+        "name": "port",
+        "ordinal": 12,
+        "type_info": "Integer"
+      },
+      {
+        "name": "container_port",
+        "ordinal": 13,
+        "type_info": "Integer"
+      },
+      {
+        "name": "retention_count!",
+        "ordinal": 14,
+        "type_info": "Integer"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 15,
+        "type_info": "Integer"
+      },
+      {
+        "name": "updated_at!",
+        "ordinal": 16,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "64615287458160cb087d7e0bd3f2182346ad6090493fcc89730cda5d5f8baf97"
+}

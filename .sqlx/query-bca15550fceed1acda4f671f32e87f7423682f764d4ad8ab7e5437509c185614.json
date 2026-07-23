@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update containers set status = ?, updated_at = unixepoch() where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "bca15550fceed1acda4f671f32e87f7423682f764d4ad8ab7e5437509c185614"
+}

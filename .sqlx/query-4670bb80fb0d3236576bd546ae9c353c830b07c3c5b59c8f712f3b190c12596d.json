@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            revision as \"revision!\",\n            spec_json as \"spec_json!\",\n            created_at as \"created_at!\"\n        from container_revisions\n        where container_id = ?\n        order by revision desc",
+  "describe": {
+    "columns": [
+      {
+        "name": "revision!",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "spec_json!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 2,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "4670bb80fb0d3236576bd546ae9c353c830b07c3c5b59c8f712f3b190c12596d"
+}

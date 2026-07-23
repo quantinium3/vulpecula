@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            p.id as \"id!\",\n            p.name as \"name!\",\n            p.description,\n            p.desired_state as \"desired_state!: DesiredState\",\n            p.status as \"status!: PackageStatus\",\n            p.created_at as \"created_at!\",\n            p.updated_at as \"updated_at!\"\n        from vulpecula_packages p\n        where exists (\n            select 1 from package_names pn\n            where pn.package_id = p.id and pn.package_manager = ?\n        )",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "description",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "desired_state!: DesiredState",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "status!: PackageStatus",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 5,
+        "type_info": "Integer"
+      },
+      {
+        "name": "updated_at!",
+        "ordinal": 6,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "625f78afa0372568f52d9d1b7a7d8037c343957cbecfc2903f7d6537afb331a0"
+}

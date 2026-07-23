@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "delete from routes where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "a8d1268b23130ee38e574910795d494317c7409eb6ab463e307b4534d2846af6"
+}

@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            ciphertext as \"ciphertext!\",\n            nonce as \"nonce!\",\n            wrapped_dek as \"wrapped_dek!\",\n            dek_nonce as \"dek_nonce!\"\n        from parameters\n        where key = ? and type = 'secure_string'",
+  "describe": {
+    "columns": [
+      {
+        "name": "ciphertext!",
+        "ordinal": 0,
+        "type_info": "Blob"
+      },
+      {
+        "name": "nonce!",
+        "ordinal": 1,
+        "type_info": "Blob"
+      },
+      {
+        "name": "wrapped_dek!",
+        "ordinal": 2,
+        "type_info": "Blob"
+      },
+      {
+        "name": "dek_nonce!",
+        "ordinal": 3,
+        "type_info": "Blob"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "718ffcad23a339ff89c8ecb0fd9204c98da9263cd93ec5dcbe94fa7f9263b366"
+}

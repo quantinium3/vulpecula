@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            id as \"id!\",\n            project_id as \"project_id!\",\n            name as \"name!\",\n            docker_container_id,\n            pending_docker_container_id,\n            desired_state as \"desired_state!: DesiredState\",\n            status as \"status!: ContainerStatus\",\n            current_revision as \"current_revision!\"\n        from containers",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "project_id!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "name!",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "docker_container_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "pending_docker_container_id",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "desired_state!: DesiredState",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "status!: ContainerStatus",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "current_revision!",
+        "ordinal": 7,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a4f32a3774b63543ba90ea0965f973f0acc3f51859ccb5da710e62e070eaf92f"
+}

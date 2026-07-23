@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into routes (id, project_id, domain, path_prefix) values (?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "5b423fd39eb362398e545812095347ffafc3af49ed5cf2eb47ed56c3a06ba3c0"
+}

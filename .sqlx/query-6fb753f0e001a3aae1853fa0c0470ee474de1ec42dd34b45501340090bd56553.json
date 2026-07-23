@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update projects set\n            name = ?, framework = ?, root_dir = ?, install_command = ?, build_command = ?,\n            output_directory = ?, start_command = ?, port = ?, container_port = ?,\n            retention_count = ?, updated_at = unixepoch()\n        where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 11
+    },
+    "nullable": []
+  },
+  "hash": "6fb753f0e001a3aae1853fa0c0470ee474de1ec42dd34b45501340090bd56553"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update parameters set value = ?, updated_at = unixepoch() where key = ? and type = 'string'",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "d554f15035a00bc83544827a7476a87dc801be3421e0d2c547a6379ab0408fa1"
+}

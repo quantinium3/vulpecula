@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "select max(revision) as \"max_revision: i64\" from container_revisions where container_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "max_revision: i64",
+        "ordinal": 0,
+        "type_info": "Null"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "999ff6a8189f2c9558bdb32a1a4142709dba7723dfe99958b77960edd5a58679"
+}

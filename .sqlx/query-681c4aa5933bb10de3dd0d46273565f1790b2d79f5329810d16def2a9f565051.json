@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            env_name as \"env_name!\",\n            parameter_key as \"parameter_key!\"\n        from project_env\n        where project_id = ?\n        order by env_name",
+  "describe": {
+    "columns": [
+      {
+        "name": "env_name!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "parameter_key!",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "681c4aa5933bb10de3dd0d46273565f1790b2d79f5329810d16def2a9f565051"
+}

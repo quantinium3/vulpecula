@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into container_revisions (container_id, revision, spec_json) values (?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "1aad055a0dad26e6c2c20c07a06deeba9810c2ff80d0d88321771154ed657ca4"
+}

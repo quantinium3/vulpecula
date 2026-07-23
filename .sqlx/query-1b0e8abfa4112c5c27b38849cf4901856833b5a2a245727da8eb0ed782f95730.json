@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update firewall_settings set desired_state = ?, updated_at = unixepoch() where id = 1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "1b0e8abfa4112c5c27b38849cf4901856833b5a2a245727da8eb0ed782f95730"
+}

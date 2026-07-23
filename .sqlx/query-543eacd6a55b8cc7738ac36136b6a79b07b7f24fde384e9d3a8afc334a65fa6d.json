@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update parameters\n        set ciphertext = ?, nonce = ?, wrapped_dek = ?, dek_nonce = ?, updated_at = unixepoch()\n        where key = ? and type = 'secure_string'",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "543eacd6a55b8cc7738ac36136b6a79b07b7f24fde384e9d3a8afc334a65fa6d"
+}

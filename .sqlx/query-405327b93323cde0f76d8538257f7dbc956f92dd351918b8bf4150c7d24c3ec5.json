@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "delete from proxy_dns_credentials where credential_name = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "405327b93323cde0f76d8538257f7dbc956f92dd351918b8bf4150c7d24c3ec5"
+}

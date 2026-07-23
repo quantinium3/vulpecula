@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "select spec_json from container_revisions where container_id = ? and revision = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "spec_json",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "eaf644358fbe9ae85dc34acee8c7ff90270de4259b19c735578006c489b0bfb9"
+}

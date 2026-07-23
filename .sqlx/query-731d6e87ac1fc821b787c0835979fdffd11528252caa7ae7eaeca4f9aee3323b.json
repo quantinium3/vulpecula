@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into project_env (project_id, env_name, parameter_key) values (?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "731d6e87ac1fc821b787c0835979fdffd11528252caa7ae7eaeca4f9aee3323b"
+}

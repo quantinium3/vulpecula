@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            credential_name as \"credential_name!\",\n            parameter_key as \"parameter_key!\"\n        from proxy_dns_credentials\n        order by credential_name",
+  "describe": {
+    "columns": [
+      {
+        "name": "credential_name!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "parameter_key!",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "edc3c7e2b5ec2edf2cca076d298a24602727e4ac6d62b18b53ce024d8f8bbdd5"
+}

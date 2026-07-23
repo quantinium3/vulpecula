@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into proxy_dns_credentials (credential_name, parameter_key) values (?, ?)\n        on conflict (credential_name) do update set parameter_key = excluded.parameter_key",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "a7b75323a3c87381fac376c0420d35426478b7d5e8fb24e647eb42faf9170ddc"
+}

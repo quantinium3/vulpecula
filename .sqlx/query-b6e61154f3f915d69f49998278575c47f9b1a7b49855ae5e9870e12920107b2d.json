@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "update routes set desired_state = ?, updated_at = unixepoch() where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "b6e61154f3f915d69f49998278575c47f9b1a7b49855ae5e9870e12920107b2d"
+}

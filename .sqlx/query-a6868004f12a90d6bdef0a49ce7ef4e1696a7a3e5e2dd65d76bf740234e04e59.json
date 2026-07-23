@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into parameters (key, type, ciphertext, nonce, wrapped_dek, dek_nonce)\n        values (?, 'secure_string', ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "a6868004f12a90d6bdef0a49ce7ef4e1696a7a3e5e2dd65d76bf740234e04e59"
+}

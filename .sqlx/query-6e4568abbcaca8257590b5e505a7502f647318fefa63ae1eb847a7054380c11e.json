@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            desired_state as \"desired_state!: DesiredState\",\n            status as \"status!: FirewallStatus\",\n            created_at as \"created_at!\",\n            updated_at as \"updated_at!\"\n        from firewall_settings\n        where id = 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "desired_state!: DesiredState",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "status!: FirewallStatus",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "updated_at!",
+        "ordinal": 3,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "6e4568abbcaca8257590b5e505a7502f647318fefa63ae1eb847a7054380c11e"
+}

@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            key as \"key!\",\n            type as \"type_!: ParameterType\",\n            value,\n            created_at as \"created_at!\",\n            updated_at as \"updated_at!\"\n        from parameters\n        where key = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "key!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "type_!: ParameterType",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "value",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "updated_at!",
+        "ordinal": 4,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "39a92ef35083960b484ea5ddd36519bdafc8753f45f5d78b2ebc6e8ff2f36cc5"
+}

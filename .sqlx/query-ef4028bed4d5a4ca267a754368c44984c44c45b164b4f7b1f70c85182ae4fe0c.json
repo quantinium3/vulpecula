@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into containers (id, project_id, name) values (?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "ef4028bed4d5a4ca267a754368c44984c44c45b164b4f7b1f70c85182ae4fe0c"
+}

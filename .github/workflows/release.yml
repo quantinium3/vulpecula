@@ -46,6 +46,8 @@ jobs:
           tool: cross
 
       - name: Build release binary
+        env:
+          SQLX_OFFLINE: "true"
         run: cross build --release --locked --target ${{ matrix.target }}
 
       - name: Prepare artifact
