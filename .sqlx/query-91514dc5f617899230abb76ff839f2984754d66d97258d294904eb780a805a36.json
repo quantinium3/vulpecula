@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            port as \"port!\",\n            name as \"name!\"\n        from projects\n        where port is not null\n        order by port",
+  "describe": {
+    "columns": [
+      {
+        "name": "port!",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "name!",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true,
+      false
+    ]
+  },
+  "hash": "91514dc5f617899230abb76ff839f2984754d66d97258d294904eb780a805a36"
+}

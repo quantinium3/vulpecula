@@ -49,6 +49,8 @@ pub fn routes(state: AppState) -> Router {
         )
         .route("/{id}/build/{build_id}", get(handler::build::get_build));
 
+    let port_router = Router::new().route("/", get(handler::port::list_used_ports));
+
     let route_router = Router::new()
         .route(
             "/",
@@ -83,6 +85,7 @@ pub fn routes(state: AppState) -> Router {
         .nest("/firewall", firewall_router)
         .nest("/package", package_router)
         .nest("/parameter", parameter_router)
+        .nest("/port", port_router)
         .nest("/project", project_router)
         .nest("/proxy", proxy_router)
         .nest("/route", route_router)

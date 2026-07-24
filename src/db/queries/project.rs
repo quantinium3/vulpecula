@@ -251,3 +251,24 @@ pub async fn insert_env<'a>(
 
     Ok(())
 }
+
+#[derive(Debug, Clone, FromRow)]
+pub struct UsedPort {
+    pub port: i64,
+    pub name: String,
+}
+
+pub async fn fetch_used_ports(pool: &SqlitePool) -> Result<Vec<UsedPort>> {
+    sqlx::query_as!(
+        UsedPort,
+        r#"select
+            port as "port!",
+            name as "name!"
+        from projects
+        where port is not null
+        order by port"#
+    )
+    .fetch_all(pool)
+    .await
+    .context("failed to fetch used ports")
+}
