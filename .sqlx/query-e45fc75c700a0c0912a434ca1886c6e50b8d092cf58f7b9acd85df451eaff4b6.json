@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "select\n            id as \"id!\",\n            name as \"name!\",\n            source_kind as \"source_kind!: ProjectSourceKind\",\n            image,\n            repo_url,\n            branch,\n            framework as \"framework: Framework\",\n            root_dir,\n            install_command,\n            build_command,\n            output_directory,\n            start_command,\n            port,\n            container_port,\n            retention_count as \"retention_count!\",\n            created_at as \"created_at!\",\n            updated_at as \"updated_at!\"\n        from projects\n        order by name",
+  "query": "select\n            id as \"id!\",\n            name as \"name!\",\n            source_kind as \"source_kind!: ProjectSourceKind\",\n            image,\n            repo_url,\n            branch,\n            framework as \"framework: Framework\",\n            root_dir,\n            install_command,\n            build_command,\n            output_directory,\n            start_command,\n            local_path,\n            port,\n            container_port,\n            retention_count as \"retention_count!\",\n            created_at as \"created_at!\",\n            updated_at as \"updated_at!\"\n        from projects\n        order by name",
   "describe": {
     "columns": [
       {
@@ -64,28 +64,33 @@
         "type_info": "Text"
       },
       {
-        "name": "port",
+        "name": "local_path",
         "ordinal": 12,
-        "type_info": "Integer"
+        "type_info": "Text"
       },
       {
-        "name": "container_port",
+        "name": "port",
         "ordinal": 13,
         "type_info": "Integer"
       },
       {
-        "name": "retention_count!",
+        "name": "container_port",
         "ordinal": 14,
         "type_info": "Integer"
       },
       {
-        "name": "created_at!",
+        "name": "retention_count!",
         "ordinal": 15,
         "type_info": "Integer"
       },
       {
-        "name": "updated_at!",
+        "name": "created_at!",
         "ordinal": 16,
+        "type_info": "Integer"
+      },
+      {
+        "name": "updated_at!",
+        "ordinal": 17,
         "type_info": "Integer"
       }
     ],
@@ -107,10 +112,11 @@
       true,
       true,
       true,
+      true,
       false,
       false,
       false
     ]
   },
-  "hash": "64615287458160cb087d7e0bd3f2182346ad6090493fcc89730cda5d5f8baf97"
+  "hash": "e45fc75c700a0c0912a434ca1886c6e50b8d092cf58f7b9acd85df451eaff4b6"
 }

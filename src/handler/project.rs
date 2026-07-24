@@ -63,6 +63,7 @@ enum ProjectSource {
         start_command: Option<String>,
     },
     LocalRepo {
+        local_path: String,
         framework: Framework,
         root_dir: Option<String>,
         install_command: Option<String>,
@@ -378,9 +379,11 @@ pub async fn create_project(
         build_command,
         output_directory,
         start_command,
+        local_path,
     ) = match &body.source {
         ProjectSource::DockerImage { image } => (
             Some(image.as_str()),
+            None,
             None,
             None,
             None,
@@ -409,8 +412,10 @@ pub async fn create_project(
             build_command.as_deref(),
             output_directory.as_deref(),
             start_command.as_deref(),
+            None,
         ),
         ProjectSource::LocalRepo {
+            local_path,
             framework,
             root_dir,
             install_command,
@@ -427,6 +432,7 @@ pub async fn create_project(
             build_command.as_deref(),
             output_directory.as_deref(),
             start_command.as_deref(),
+            Some(local_path.as_str()),
         ),
     };
 
@@ -449,6 +455,7 @@ pub async fn create_project(
         build_command,
         output_directory,
         start_command,
+        local_path,
         port,
         container_port,
         retention_count: body.retention_count,
