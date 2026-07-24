@@ -37,6 +37,7 @@ pub struct Project {
     pub output_directory: Option<String>,
     pub start_command: Option<String>,
     pub local_path: Option<String>,
+    pub dockerfile_path: Option<String>,
     pub port: Option<i64>,
     pub container_port: Option<i64>,
     pub retention_count: i64,
@@ -58,6 +59,7 @@ pub struct NewProject<'a> {
     pub output_directory: Option<&'a str>,
     pub start_command: Option<&'a str>,
     pub local_path: Option<&'a str>,
+    pub dockerfile_path: Option<&'a str>,
     pub port: Option<i64>,
     pub container_port: Option<i64>,
     pub retention_count: i64,
@@ -70,8 +72,8 @@ pub async fn create<'a>(
     sqlx::query!(
         "insert into projects
             (id, name, source_kind, image, repo_url, branch, framework, root_dir,
-             install_command, build_command, output_directory, start_command, local_path, port, container_port, retention_count)
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+             install_command, build_command, output_directory, start_command, local_path, dockerfile_path, port, container_port, retention_count)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         p.id,
         p.name,
         p.source_kind,
@@ -85,6 +87,7 @@ pub async fn create<'a>(
         p.output_directory,
         p.start_command,
         p.local_path,
+        p.dockerfile_path,
         p.port,
         p.container_port,
         p.retention_count
@@ -112,6 +115,7 @@ pub async fn fetch_all(pool: &SqlitePool) -> Result<Vec<Project>> {
             output_directory,
             start_command,
             local_path,
+            dockerfile_path,
             port,
             container_port,
             retention_count as "retention_count!",
@@ -142,6 +146,7 @@ pub async fn fetch_one(pool: &SqlitePool, id: &str) -> Result<Option<Project>> {
             output_directory,
             start_command,
             local_path,
+            dockerfile_path,
             port,
             container_port,
             retention_count as "retention_count!",

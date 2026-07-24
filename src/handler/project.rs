@@ -61,6 +61,7 @@ enum ProjectSource {
         build_command: Option<String>,
         output_directory: Option<String>,
         start_command: Option<String>,
+        dockerfile_path: Option<String>,
     },
     LocalRepo {
         local_path: String,
@@ -70,6 +71,7 @@ enum ProjectSource {
         build_command: Option<String>,
         output_directory: Option<String>,
         start_command: Option<String>,
+        dockerfile_path: Option<String>,
     },
 }
 
@@ -110,6 +112,7 @@ fn validate_framework_fields(
     build_command: &Option<String>,
     output_directory: &Option<String>,
     start_command: &Option<String>,
+    dockerfile_path: &Option<String>,
 ) -> Result<(), ApiError> {
     match framework {
         Framework::Dockerfile => {
@@ -120,14 +123,17 @@ fn validate_framework_fields(
         }
         Framework::React | Framework::Svelte => {
             reject_if_set("start_command", start_command, framework)?;
+            reject_if_set("dockerfile_path", dockerfile_path, framework)?;
         }
         Framework::Static => {
             reject_if_set("install_command", install_command, framework)?;
             reject_if_set("build_command", build_command, framework)?;
             reject_if_set("start_command", start_command, framework)?;
+            reject_if_set("dockerfile_path", dockerfile_path, framework)?;
         }
         Framework::Express => {
             reject_if_set("output_directory", output_directory, framework)?;
+            reject_if_set("dockerfile_path", dockerfile_path, framework)?;
         }
     }
     Ok(())
@@ -142,6 +148,7 @@ fn validate_source(source: &ProjectSource) -> Result<(), ApiError> {
             build_command,
             output_directory,
             start_command,
+            dockerfile_path,
             ..
         }
         | ProjectSource::LocalRepo {
@@ -150,6 +157,7 @@ fn validate_source(source: &ProjectSource) -> Result<(), ApiError> {
             build_command,
             output_directory,
             start_command,
+            dockerfile_path,
             ..
         } => validate_framework_fields(
             *framework,
@@ -157,6 +165,7 @@ fn validate_source(source: &ProjectSource) -> Result<(), ApiError> {
             build_command,
             output_directory,
             start_command,
+            dockerfile_path,
         ),
     }
 }
@@ -283,6 +292,7 @@ pub async fn update_project(
             &build_command,
             &output_directory,
             &start_command,
+            &None::<String>,
         )?;
 
         if framework == Framework::Static && body.env.is_some() {
@@ -380,9 +390,11 @@ pub async fn create_project(
         output_directory,
         start_command,
         local_path,
+        dockerfile_path,
     ) = match &body.source {
         ProjectSource::DockerImage { image } => (
             Some(image.as_str()),
+            None,
             None,
             None,
             None,
@@ -402,6 +414,7 @@ pub async fn create_project(
             build_command,
             output_directory,
             start_command,
+            dockerfile_path,
         } => (
             None,
             Some(repo_url.as_str()),
@@ -413,6 +426,7 @@ pub async fn create_project(
             output_directory.as_deref(),
             start_command.as_deref(),
             None,
+            dockerfile_path.as_deref(),
         ),
         ProjectSource::LocalRepo {
             local_path,
@@ -422,6 +436,7 @@ pub async fn create_project(
             build_command,
             output_directory,
             start_command,
+            dockerfile_path,
         } => (
             None,
             None,
@@ -433,6 +448,7 @@ pub async fn create_project(
             output_directory.as_deref(),
             start_command.as_deref(),
             Some(local_path.as_str()),
+            dockerfile_path.as_deref(),
         ),
     };
 
@@ -456,6 +472,7 @@ pub async fn create_project(
         output_directory,
         start_command,
         local_path,
+        dockerfile_path,
         port,
         container_port,
         retention_count: body.retention_count,

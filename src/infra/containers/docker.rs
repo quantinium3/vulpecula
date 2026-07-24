@@ -6,7 +6,7 @@ use bollard::{
     query_parameters::{
         CreateContainerOptionsBuilder, CreateImageOptionsBuilder, InspectContainerOptionsBuilder,
         ListNetworksOptionsBuilder, LogsOptionsBuilder, RemoveContainerOptionsBuilder,
-        StopContainerOptionsBuilder,
+        RemoveImageOptions, StopContainerOptionsBuilder, TagImageOptionsBuilder,
     },
 };
 use futures_util::TryStreamExt;
@@ -124,6 +124,7 @@ impl DockerClient {
         env: Vec<String>,
     ) -> Result<String> {
         self.pull_image(image).await?;
+        let run_image = self.local_image_name(image).await?;
 
         let mut host_config = HostConfig {
             network_mode: Some(CONTAINER_NETWORK_NAME.to_string()),
@@ -143,7 +144,7 @@ impl DockerClient {
         }
 
         let config = ContainerCreateBody {
-            image: Some(image.to_string()),
+            image: Some(run_image),
             env: Some(env),
             host_config: Some(host_config),
             ..Default::default()
@@ -163,6 +164,29 @@ impl DockerClient {
             .with_context(|| format!("failed to start container {name}"))?;
 
         Ok(response.id)
+    }
+
+    async fn local_image_name(&self, image: &str) -> Result<String> {
+        let Some(rest) = image.strip_prefix(&format!("localhost:{REGISTRY_PORT}/")) else {
+            return Ok(image.to_string());
+        };
+
+        let (repo, tag) = rest.rsplit_once(':').unwrap_or((rest, "latest"));
+
+        self.0
+            .tag_image(
+                image,
+                Some(TagImageOptionsBuilder::default().repo(repo).tag(tag).build()),
+            )
+            .await
+            .with_context(|| format!("failed to re-tag {image} as {rest}"))?;
+
+        let _ = self
+            .0
+            .remove_image(image, None::<RemoveImageOptions>, None)
+            .await;
+
+        Ok(rest.to_string())
     }
 
     pub async fn logs(&self, docker_container_id: &str, tail: i64) -> Result<String> {

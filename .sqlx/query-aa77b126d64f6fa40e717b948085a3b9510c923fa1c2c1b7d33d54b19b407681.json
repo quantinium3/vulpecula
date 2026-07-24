@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into projects\n            (id, name, source_kind, image, repo_url, branch, framework, root_dir,\n             install_command, build_command, output_directory, start_command, local_path, dockerfile_path, port, container_port, retention_count)\n        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 17
+    },
+    "nullable": []
+  },
+  "hash": "aa77b126d64f6fa40e717b948085a3b9510c923fa1c2c1b7d33d54b19b407681"
+}
