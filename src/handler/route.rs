@@ -57,7 +57,7 @@ pub async fn create_route(
         Ok(()) => {}
         Err(err) if err.as_database_error().is_some_and(|e| e.is_unique_violation()) => {
             return Err(ApiError::conflict(format!(
-                "route {}{} already exists",
+                "project is already linked to {}{}",
                 body.domain, body.path_prefix
             )));
         }

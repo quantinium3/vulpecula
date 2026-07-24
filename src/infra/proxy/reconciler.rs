@@ -103,28 +103,46 @@ async fn build_config(
     let all_routes = route::fetch_all(pool).await?;
     let mut caddy_routes = Vec::new();
 
+    let mut groups: Vec<((String, String), Vec<&Route>)> = Vec::new();
     for r in all_routes
         .iter()
         .filter(|r| r.desired_state == RouteDesiredState::Active)
     {
-        match resolve_upstream(pool, r).await {
-            Ok(Some(dial)) => {
-                caddy_routes.push(json!({
-                    "match": [{ "host": [r.domain], "path": [format!("{}*", r.path_prefix)] }],
-                    "handle": [{
-                        "handler": "reverse_proxy",
-                        "upstreams": [{ "dial": dial }]
-                    }]
-                }));
-                route::set_status(pool, &r.id, RouteStatus::Synced).await?;
+        let key = (r.domain.clone(), r.path_prefix.clone());
+        match groups.iter_mut().find(|(k, _)| *k == key) {
+            Some((_, members)) => members.push(r),
+            None => groups.push((key, vec![r])),
+        }
+    }
+
+    for ((domain, path_prefix), members) in &groups {
+        let mut upstreams = Vec::new();
+
+        for r in members {
+            match resolve_upstream(pool, r).await {
+                Ok(Some(dial)) => {
+                    upstreams.push(json!({ "dial": dial }));
+                    route::set_status(pool, &r.id, RouteStatus::Synced).await?;
+                }
+                Ok(None) => {
+                    route::set_status(pool, &r.id, RouteStatus::Pending).await?;
+                }
+                Err(e) => {
+                    tracing::error!(route = %r.id, error = ?e, "failed to resolve route upstream");
+                    route::set_status(pool, &r.id, RouteStatus::Failed).await?;
+                }
             }
-            Ok(None) => {
-                route::set_status(pool, &r.id, RouteStatus::Pending).await?;
-            }
-            Err(e) => {
-                tracing::error!(route = %r.id, error = ?e, "failed to resolve route upstream");
-                route::set_status(pool, &r.id, RouteStatus::Failed).await?;
-            }
+        }
+
+        if !upstreams.is_empty() {
+            caddy_routes.push(json!({
+                "match": [{ "host": [domain], "path": [format!("{path_prefix}*")] }],
+                "handle": [{
+                    "handler": "reverse_proxy",
+                    "load_balancing": { "selection_policy": { "policy": "round_robin" } },
+                    "upstreams": upstreams
+                }]
+            }));
         }
     }
 
