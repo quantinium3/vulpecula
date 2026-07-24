@@ -15,8 +15,8 @@ use futures_util::TryStreamExt;
 use std::collections::HashMap;
 
 use crate::constant::{
-    CONTAINER_NETWORK_NAME, PROXY_ADMIN_PORT, PROXY_CONFIG_VOLUME, PROXY_CONTAINER_NAME,
-    PROXY_DATA_VOLUME, PROXY_HTTP_PORT, PROXY_HTTPS_PORT, PROXY_IMAGE,
+    CONTAINER_NETWORK_NAME, PROXY_ADMIN_LISTEN_ADDR, PROXY_ADMIN_PORT, PROXY_CONFIG_VOLUME,
+    PROXY_CONTAINER_NAME, PROXY_DATA_VOLUME, PROXY_HTTP_PORT, PROXY_HTTPS_PORT, PROXY_IMAGE,
 };
 
 #[derive(Clone)]
@@ -124,8 +124,14 @@ impl ProxyDockerClient {
             },
         ];
 
+        let start_script = format!(
+            "printf '{{\\nadmin {PROXY_ADMIN_LISTEN_ADDR}\\n}}\\n' > /etc/caddy/Caddyfile && exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"
+        );
+
         let config = ContainerCreateBody {
             image: Some(PROXY_IMAGE.to_string()),
+            entrypoint: Some(vec!["sh".to_string(), "-c".to_string()]),
+            cmd: Some(vec![start_script]),
             host_config: Some(HostConfig {
                 network_mode: Some(CONTAINER_NETWORK_NAME.to_string()),
                 port_bindings: Some(port_bindings),

@@ -6,6 +6,7 @@ use sqlx::SqlitePool;
 use tokio::sync::Notify;
 
 use crate::{
+    constant::PROXY_ADMIN_LISTEN_ADDR,
     db::queries::{
         container,
         parameter::{self, ParameterType},
@@ -154,6 +155,7 @@ async fn build_config(
     }
 
     let mut config = json!({
+        "admin": { "listen": PROXY_ADMIN_LISTEN_ADDR },
         "apps": {
             "http": {
                 "servers": {
