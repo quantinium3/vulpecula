@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "select coalesce(max(number), 0) + 1 as \"next!: i64\" from builds where project_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "next!: i64",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4cd31a9a1a5dbb696539481a9b0793852e3f11060b087352bc0387e42b2d2413"
+}

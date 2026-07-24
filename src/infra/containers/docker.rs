@@ -5,7 +5,8 @@ use bollard::{
     models::{ContainerCreateBody, HostConfig, NetworkCreateRequest, PortBinding, RestartPolicy, RestartPolicyNameEnum},
     query_parameters::{
         CreateContainerOptionsBuilder, CreateImageOptionsBuilder, InspectContainerOptionsBuilder,
-        ListNetworksOptionsBuilder, RemoveContainerOptionsBuilder, StopContainerOptionsBuilder,
+        ListNetworksOptionsBuilder, LogsOptionsBuilder, RemoveContainerOptionsBuilder,
+        StopContainerOptionsBuilder,
     },
 };
 use futures_util::TryStreamExt;
@@ -162,6 +163,27 @@ impl DockerClient {
             .with_context(|| format!("failed to start container {name}"))?;
 
         Ok(response.id)
+    }
+
+    pub async fn logs(&self, docker_container_id: &str, tail: i64) -> Result<String> {
+        let options = LogsOptionsBuilder::default()
+            .stdout(true)
+            .stderr(true)
+            .tail(&tail.to_string())
+            .build();
+
+        let mut stream = self.0.logs(docker_container_id, Some(options));
+        let mut output = String::new();
+
+        while let Some(chunk) = stream
+            .try_next()
+            .await
+            .context("failed to read container logs")?
+        {
+            output.push_str(&String::from_utf8_lossy(&chunk.into_bytes()));
+        }
+
+        Ok(output)
     }
 
     pub async fn stop_and_remove(&self, docker_container_id: &str) -> Result<()> {

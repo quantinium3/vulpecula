@@ -1,3 +1,4 @@
+pub mod build;
 pub mod container;
 pub mod firewall;
 pub mod health;

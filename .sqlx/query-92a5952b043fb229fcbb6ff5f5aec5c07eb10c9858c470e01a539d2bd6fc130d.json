@@ -1,0 +1,80 @@
+{
+  "db_name": "SQLite",
+  "query": "select\n            id as \"id!\",\n            project_id as \"project_id!\",\n            number as \"number!\",\n            status as \"status!: BuildStatus\",\n            tag,\n            sha as \"commit_sha\",\n            error,\n            log as \"log!\",\n            started_at as \"started_at!\",\n            finished_at as \"finished_at!\",\n            created_at as \"created_at!\"\n        from builds\n        where id = ? and project_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "project_id!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "number!",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "status!: BuildStatus",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "tag",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "commit_sha",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "error",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "log!",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "started_at!",
+        "ordinal": 8,
+        "type_info": "Integer"
+      },
+      {
+        "name": "finished_at!",
+        "ordinal": 9,
+        "type_info": "Integer"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 10,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "92a5952b043fb229fcbb6ff5f5aec5c07eb10c9858c470e01a539d2bd6fc130d"
+}

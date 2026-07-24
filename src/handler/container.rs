@@ -1,5 +1,5 @@
-use axum::extract::{Path, State};
-use serde::Serialize;
+use axum::extract::{Path, Query, State};
+use serde::{Deserialize, Serialize};
 
 use crate::{
     db::queries::container::{self, Container, ContainerStatus, DesiredState},
@@ -55,6 +55,38 @@ pub async fn get_container(
         .ok_or_else(|| ApiError::not_found(format!("container {id} not found")))?;
 
     Ok(ApiResponse::ok(container.into(), "container fetched"))
+}
+
+#[derive(Serialize)]
+pub struct ContainerLogsResponse {
+    pub logs: String,
+}
+
+#[derive(Deserialize)]
+pub struct LogsQuery {
+    tail: Option<i64>,
+}
+
+pub async fn get_container_logs(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    Query(query): Query<LogsQuery>,
+) -> Result<ApiResponse<ContainerLogsResponse>, ApiError> {
+    let container = container::fetch_one(&state.db, &id)
+        .await
+        .map_err(|e| ApiError::internal(e.into()))?
+        .ok_or_else(|| ApiError::not_found(format!("container {id} not found")))?;
+
+    let logs = match container.docker_container_id {
+        Some(docker_id) => state
+            .docker
+            .logs(&docker_id, query.tail.unwrap_or(200))
+            .await
+            .map_err(ApiError::internal)?,
+        None => String::new(),
+    };
+
+    Ok(ApiResponse::ok(ContainerLogsResponse { logs }, "logs fetched"))
 }
 
 pub async fn start_container(

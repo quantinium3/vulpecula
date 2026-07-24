@@ -26,6 +26,7 @@ pub fn routes(state: AppState) -> Router {
     let container_router = Router::new()
         .route("/", get(handler::container::list_containers))
         .route("/{id}", get(handler::container::get_container))
+        .route("/{id}/logs", get(handler::container::get_container_logs))
         .route("/{id}/start", post(handler::container::start_container))
         .route("/{id}/stop", post(handler::container::stop_container));
 
@@ -41,7 +42,12 @@ pub fn routes(state: AppState) -> Router {
                 .delete(handler::project::delete_project),
         )
         .route("/{id}/deploy", post(handler::project::deploy_project))
-        .route("/{id}/revisions", get(handler::project::get_project_revisions));
+        .route("/{id}/revisions", get(handler::project::get_project_revisions))
+        .route(
+            "/{id}/build",
+            get(handler::build::list_builds).post(handler::build::create_build),
+        )
+        .route("/{id}/build/{build_id}", get(handler::build::get_build));
 
     let route_router = Router::new()
         .route(
